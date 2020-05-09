@@ -1,0 +1,97 @@
+﻿<mat-card [ngClass]="{'fullscreen':isAllFullScreen}" (click)="showFulscreenButton()">
+    <mat-card-title *ngIf="!isAllFullScreen">
+        <h1>Dashboard</h1>
+        <mat-form-field>
+            <mat-label>Select period</mat-label>
+            <mat-select [value]="selectedOption" (selectionChange)="changePeriod($event.value)">
+                <mat-option value="1">
+                    Month
+                </mat-option>
+                <mat-option value="2">
+                    Week
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </mat-card-title>
+    <mat-card-content>
+        <mat-icon [ngClass]="{'hidden':isAllFullScreen && showFullScreen}" (click)="allFullScreenToggle()" >{{!isAllFullScreen?'fullscreen':'fullscreen_exit'}}</mat-icon>
+        <div class="charts row">
+            <div class="chart col-lg-4 col-md-4 {{isFullScreen? chartType=='line-accounts'?'fullscreen': 'hide':''}}" *ngIf="lineChartTotalAccounts[0].data.length > 0">
+                <div class="head-section">
+                    <div class="title-section">
+                        <span class="title">{{maxValueTotalAccounts}}</span>
+                        <span class="sub-title">Total accounts</span>
+                    </div>
+                </div>
+                <div class="graph">
+                    <canvas
+                            baseChart
+                            [chartType]="'line'"
+                            [datasets]="lineChartTotalAccounts"
+                            [options]="totalAccountsOptions"
+                            [labels]="labels"
+                            [legend]="false"
+                            [colors]="chartColors">
+                    </canvas>
+                </div>
+            </div>
+            <div class="chart col-lg-4 col-md-4 {{isFullScreen? chartType=='bar-new-accounts'?'fullscreen': 'hide':''}}" *ngIf="barChartNewAccounts[0].data.length > 0">
+                <div class="head-section">
+                    <div class="title-section">
+                        <span class="title">{{maxValueNewAccounts}} <span>({{maxValueNewAccountsAverage}} average per {{selectedOption==1?"month":"week"}})</span></span>
+                        <span class="sub-title">New accounts</span>
+                    </div>
+                </div>
+                <div class="graph">
+                    <canvas
+                            baseChart
+                            [chartType]="'bar'"
+                            [datasets]="barChartNewAccounts"
+                            [options]="newAccountsOptions"
+                            [labels]="labels"
+                            [colors]="chartBarColors"
+                            [legend]="false">
+                    </canvas>
+                </div>
+            </div>
+            <div class="chart col-lg-4 col-md-4 {{isFullScreen? chartType=='bar-conversion-rate'?'fullscreen': 'hide':''}}" *ngIf="barChartConversionRate[0].data.length > 0">
+                <div class="head-section">
+                    <div class="title-section">
+                        <span class="title">{{conversionRateAverage}}% <span>conversion rate per {{selectedOption==1?"month":"week"}}</span></span>
+                        <span class="sub-title">Conversion Rate</span>
+                    </div>
+                </div>
+                <div class="graph">
+                    <canvas
+                            baseChart
+                            [chartType]="'bar'"
+                            [datasets]="barChartConversionRate"
+                            [options]="conversionRateOptions"
+                            [labels]="labels"
+                            [colors]="chartConversionBarColors"
+                            [legend]="false">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+        <div class="charts row">
+            <div class="chart col-lg-12 col-md-12 {{isFullScreen? chartType=='round-retention'?'fullscreen': 'hide':''}}" *ngIf="roundScreenFlow[0].length > 0">
+                <div class="head-section">
+                    <div class="title-section">
+                        <span class="sub-title">Screenflow</span>
+                    </div>
+                </div>
+                <div class="graph-round">
+                    <canvas
+                            baseChart
+                            [chartType]="'doughnut'"
+                            [data]="roundScreenFlow"
+                            [labels]="screenFlowLabels"
+                            [options]="screenFlowOptions"
+                            [colors]="doughnutColorsScreenFlow">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
